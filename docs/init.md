@@ -24,3 +24,6 @@ docker exec -it "$AUTH" bundle exec rails db:create db:migrate RAILS_ENV=develop
 
 # crm
 docker exec -it "$CRM" bin/rails db:environment:set RAILS_ENV=development
+
+git config --global user.email "ericocesar@webck.com.br"
+git config --global user.name "ericocesar"
