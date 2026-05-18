@@ -112,6 +112,9 @@ services:
   evo_auth_sidekiq:
     image: evoapicloud/evo-auth-service-community:latest
     command: sh -c "bundle exec sidekiq"
+    # Disable inherited HTTP healthcheck — Sidekiq has no web server.
+    healthcheck:
+      disable: true
     environment:
       RAILS_ENV: production
       SECRET_KEY_BASE: "a]i9F#k2$$Lm7Nq0R!sT4uW6xZ8bD1eG3hJ5oP7rV9yAcE2fH4jM6pS8vX0zB3dK5nQ7tU9wY1"
@@ -183,6 +186,9 @@ services:
   evo_crm_sidekiq:
     image: evoapicloud/evo-ai-crm-community:latest
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+    # Disable inherited HTTP healthcheck — Sidekiq has no web server.
+    healthcheck:
+      disable: true
     environment:
       RAILS_ENV: production
       SECRET_KEY_BASE: "a]i9F#k2$$Lm7Nq0R!sT4uW6xZ8bD1eG3hJ5oP7rV9yAcE2fH4jM6pS8vX0zB3dK5nQ7tU9wY1"

@@ -86,6 +86,9 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    # Disable inherited HTTP healthcheck — Sidekiq has no web server.
+    healthcheck:
+      disable: true
     command: bash -c "bundle install && bundle exec sidekiq"
 
   # ---------------------------------------------------------------------------
@@ -167,6 +170,9 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    # Disable inherited HTTP healthcheck — Sidekiq has no web server.
+    healthcheck:
+      disable: true
     entrypoint: docker/entrypoints/rails.sh
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
 

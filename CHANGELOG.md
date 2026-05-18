@@ -21,6 +21,113 @@ Este repositório é o guarda-chuva da família CRM Community: orquestra os 7 su
 
 - N/A
 
+## [v1.0.0-rc3] - 2026-05-17
+
+Release de estabilização posterior ao `v1.0.0-rc2` (2026-05-05). Janela de ~12 dias com ~16 commits no super-repo e ~165 commits/PRs entre os submódulos. Foco predominante em **correções de bugs** de produção identificados após o rc2 — mensageria Evolution Go, mídia outbound, hardening de endpoints públicos, 2FA, RBAC, escopo IDOR, filtragem de secrets em logs — combinadas com a fundação técnica do open-core (Extension Points em todos os serviços + Plugin Host Runtime no frontend) e duas features cross-stack: products catalog e template bundles export/import.
+
+### Highlights
+
+- 🐛 **Massive bug fix release** — 6 frentes principais de hardening: paridade de payload Evolution Go (botões/listas EVO-1115), entrega de mídia outbound (EVO-1151), Notificame verify hardening (EVO-986), bulk actions com escopo IDOR (EVO-1084), filtragem de secrets em logs Rails (EVO-1111), 2FA backup codes hash+500 (EVO-991).
+- 🧩 **Open-core foundation completa**: todos os 5 submódulos agora declaram `EXTENSION_POINTS.md` + módulos no-op. O frontend ganhou um **Plugin Host Runtime** (EVO-1379) que carrega plugins externos sem fork. O auth-service ganhou `LoginGate` e `TokenClaims` como pontos de extensão estritos. O CRM ganhou CI guard-rail (EVO-1287) que impede alteração silenciosa do contrato.
+- 📦 **Products catalog** — modelo de products com variantes, attach a agentes, integração com pipeline para vendas. Tools nativas no processor (`link_product_to_pipeline_item`) e injeção do catálogo no contexto do agente.
+- 📤 **Template bundles export/import (EVO-1116)** — empacotamento de configuração (inboxes, agentes, automation rules, canned responses, templates) em ZIP portável entre instalações. Permissão dedicada no RBAC (`template_bundles.manage`), wizard de export no frontend, i18n pt/es/fr/it.
+- 🛡️ **Roles & Permissions UI completa (EVO-1061)** — tela de administração de papéis customizados com CRUD pleno, escopo `account_owner`, e guard contra privilege escalation via delegation de permissão não detida.
+- 🔌 **Knowledge Nexus integration** — agentes podem buscar em spaces do Nexus diretamente do prompt (`knowledge_nexus_search` tool no processor + space picker no Agent Builder do frontend + endpoint proxy no core-service).
+- 🤖 **Automation rules — consolidação**: operador `attribute_changed` em labels (EVO-1058), listeners `conversation_resolved` / `conversation_status_changed` (EVO-1057), `move_to_pipeline` cross-pipeline action, dedup em janela de 5s, painel de logs no frontend.
+
+### Added
+
+- **Plugin Host Runtime no frontend (EVO-1379)** — carrega plugins externos em runtime; base para a Enterprise edition injetar features sem fork.
+- **`EXTENSION_POINTS.md` em todos os 5 submódulos** — contrato público versionado de pontos de extensão. Auth: `LoginGate` + `TokenClaims`. CRM: 4 hooks + `lib/evo_extension_points/` no-op + CI guard-rail (EVO-1287). Frontend: 4 categorias declaradas (EVO-1284/1378) com Plugin Host Runtime na v2.1.0 (EVO-1387). Core-service: `pkg/evoextensions` com 3 interfaces no-op (EVO-1285). Processor: documento de hooks (EVO-1376).
+- **Products catalog (CRM + frontend + processor)** — modelo com variantes, attach a agentes, panel de vendas no pipeline, injeção no contexto do agente, tool `link_product_to_pipeline_item`, permissões `products.*` no RBAC.
+- **Template bundles export/import (EVO-1116)** — feature cross-stack (CRM + frontend + auth RBAC) para empacotar configuração de instalação em ZIP. Recurso `template_bundles` declarado no auth, endpoint no CRM, wizard de export no frontend com i18n.
+- **Roles & Permissions admin UI (EVO-1061)** — tela completa de gestão de papéis no frontend + CRUD API no auth-service + guards de boundary `account_owner`/`super_admin` + spec de regressão.
+- **Knowledge Nexus integration** — `knowledge_nexus_search` tool nativa no processor, space picker no Agent Builder, endpoint proxy no core-service.
+- **Tools nativas no processor LLM agent** — `knowledge_nexus_search`, `manage_conversation_labels`, `link_product_to_pipeline_item`.
+- **Automation rules** — operador `attribute_changed` com pickers From/To (EVO-1058), listeners `conversation_resolved` e `conversation_status_changed` (EVO-1057), action `move_to_pipeline` (cross-pipeline), painel de logs no frontend, action service com `send_canned_response` e `send_template`.
+- **Bulk actions** — resolve em massa de conversas via checkbox (EVO-1011), response com `success_ids` / `failed_ids` por item.
+- **Pipelines — `move_to_pipeline` action** — automation move conversa entre pipelines preservando id, com dedup em janela de 5s.
+- **EVO-1051** — `DELETE` endpoint para limpar admin config por tipo (CRM) + botão "Clear Configuration" no Admin Settings (frontend).
+- **EVO-1189** — Delete contact action no frontend.
+- **EVO-990** — Pipeline actions disponíveis no menu 3 pontos e context menu (right-click).
+- **EVO-988** — Telefone do contato visível na lista de conversas e header do chat.
+- **EVO-1146 — i18n** — múltiplas chaves missing adicionadas em 6 locales no frontend; locales pt/es/fr/it adicionados para template bundles.
+- **Specs de regressão** — `pipeline_item` auto-assign-and-move (EVO-1080), Notificame verify (EVO-986), contato com attachments (EVO-973), webhooks de macro (EVO-1041), boundary `account_owner`/`super_admin` (EVO-1060), permission set do role `agent` (EVO-1060).
+
+### Changed
+
+- **EVO-1049 — SMTP/BMS/Resend aplicados em runtime no auth-service** — operador pode trocar essas configs via UI sem restart do container. Frontend retirou o banner de workaround (rc2) que pedia restart.
+- **EVO-1113 — Consolidação de resolução de credenciais Evolution no CRM** — single concern (`EvolutionConcern`) centraliza fallback per-field para `api_url`/`admin_token`. Reduz superfície de bug entre Evolution API e Evolution Go.
+- **EVO-1147 — Polling de provider config no frontend** — Page Visibility API integrada, sem polling em aba background; `provider_config` removido das deps.
+- **EVO-1085 — Reconexão de WebSocket** — reconexão ativa com toast de sucesso + backoff em background.
+- **EVO-1131 — Upload de arquivos grandes** — skip de fetch+blob, limite elevado para 100MB.
+- **EVO-1044 — Per-field GlobalConfig fallback detection** — banner do Connection Settings agora detecta campo a campo.
+- **EVO-976 — Avatar storage** (#80, umbrella) — volumes compartilhados, `AUTH_SERVICE_URL` documentado, storage docs atualizadas.
+- **`EVOLUTION_OPERATOR_EMAIL`** documentado no `.env.example` (licensing).
+- **Docs / branding** — toda a stack padronizada para Evolution Foundation 2026 (README, LICENSE, NOTICE, TRADEMARKS); URLs GitHub migradas de `EvolutionAPI` para `evolution-foundation`.
+- **Docker tag convention** — corrigido no `release.yml` e README do umbrella (sem prefixo `v` nas tags Docker).
+- **CI** — workflows passam a rodar em PRs contra `develop` (não só `main`); pacotes Linear/CRM com PR link buscado dos comentários do Linear no skill `code-review`.
+
+### Fixed
+
+#### Mensageria — Evolution Go / Evolution API
+- **EVO-1115** — payload de buttons/lists corrigido para formato Evolution Go (paridade com Evolution API). Mensagens interativas chegavam malformadas.
+- **EVO-1151** — falha de entrega de mídia outbound em ambos os providers (Evolution API e Evolution Go).
+- **Mensagens duplicadas no incoming handler do Evolution Go** — dedup no entry point.
+- **Fallback de `api_url` / `admin_token`** — cai para `GlobalConfig` quando inbox config está vazia.
+
+#### Estabilidade / API REST
+- **2FA backup codes** (EVO-991, auth) — 500 NoMethodError + hash plaintext no banco. Corrigido com BCrypt + handling de campo nulo.
+- **EVO-1063 — Password validation 422 estruturada** (auth + frontend) — resposta com códigos machine-readable consumida por checklist inline no formulário de criação de usuário.
+- **EVO-1046 — `setupRequired=false` default** quando `/setup/status` erra (frontend) — antes 5xx no setup status bloqueava o app inteiro.
+- **EVO-1107 — Configuration tab blank/slow load** — skeleton + polling corrigido.
+- **EVO-1048 — Sidebar colapsada** — submenu flyout e tooltip aparecem quando sidebar está collapsed.
+- **EVO-1145 — Conversation match em reducers** — agora casa por `id || uuid`.
+- **EVO-1078 / 1054 / 1062 / 1056** — bugs múltiplos de chat e auth resolvidos em batch.
+
+#### Webhooks / Notificame
+- **EVO-986 — Notificame verify endpoint hardening** — auth obrigatório, validação de payload, sem error leakage; spec de regressão.
+- **EVO-1041 — Macro webhook delivery failures** — falhas agora são surfaceadas; re-raise restrito a `:macro_webhook` para evitar retry storm.
+- **EVO-1130 — Attachment fallback_title** — prefere `content[:fileName]`.
+
+#### Automation / Pipeline
+- **`labels` condition** — `EXISTS` subquery (independente, NULL-safe), resolve UUIDs para titles, casa label em conversation OU contact.
+- **`message_type` filter** — aceita valores numéricos.
+- **`apply_label` action** — resolve UUIDs para titles antes de tagear; abre label picker no frontend.
+- **`pipeline_stage_updated`** — dedup em janela de 5s por `(rule, pipeline_item, stage)`.
+- **Cross-pipeline stage movement** — bypass correto da validação `same-pipeline`.
+- **Build break** — `MessageTemplateVariable` definido localmente.
+- **Menu** — item de automation duplicado removido.
+- **EVO-1018 — Group contacts** — distingue contatos de grupo WhatsApp de contatos reais (CRM + frontend).
+- **EVO-998** — arquivos órfãos de contact events e dead i18n removidos.
+
+#### RBAC
+- **EVO-1060 — `agent` role** — `pipelines.read` backfilled, `pipelines.update` removido (teria desbloqueado endpoints destrutivos).
+
+#### Mídia (EVO-999)
+- **HIGH review findings** aplicadas: video file_type fallback, attachment fallback_title, force-download via fetch+blob coberto em todos os caminhos.
+
+#### Outros
+- **DB asyncpg** (processor) — `sslmode` traduzido para `ssl` (parâmetro nativo do driver).
+- **Docker bundler** (CRM) — versão fixada na install.
+
+### Security
+
+- **EVO-1111 — Filtragem de secrets em logs Rails** (CRM) — campos sensíveis (password, token, api_key) filtrados antes do log.
+- **EVO-1084 — IDOR scope no `BulkActionsJob`** (CRM) — escopo de account aplicado; antes era possível manipular recursos cross-tenant com um ID válido.
+- **EVO-1061 — Privilege escalation via delegation** (auth) — `account_owner` não consegue mais delegar permissões que ele próprio não detém.
+- **EVO-986 — Notificame verify** (CRM) — auth obrigatório + sem error leakage.
+- **2FA backup codes** (auth) — codes hashed com BCrypt; antes ficavam em plaintext no banco.
+
+### Notas para upgrade de PROD existente
+
+- ✅ **Mudanças em RBAC do role `agent`** ativam automaticamente via `db:migrate` (EVO-1060) — não requer reseed.
+- ✅ **SMTP/BMS/Resend runtime** (EVO-1049) — aplicado automaticamente após upgrade do auth-service. Operador pode trocar configs sem restart.
+- ✅ **Filtragem de secrets nos logs** — ativa automaticamente após upgrade do CRM. Logs antigos não são afetados (apenas as novas entradas).
+- ⚠️ **Backup codes 2FA** — a partir do rc3 os codes são armazenados com BCrypt. Codes gerados antes do rc3 ficaram em plaintext no banco; se o histórico do banco esteve acessível a alguém fora do operador da instalação, recomenda-se regenerar via UI.
+- 📝 **`EXTENSION_POINTS.md`** — apenas contrato público; não há ação de migração. Reativa para Enterprise edition que injeta as implementações.
+- 📝 **CHANGELOG por submódulo** tem o detalhamento técnico completo — esta seção é o resumo guarda-chuva.
+
 ## [v1.0.0-rc2] - 2026-05-05
 
 Release de estabilização posterior ao `v1.0.0-rc1` (2026-04-24). Janela de ~3 semanas concentrando ~40 commits de orquestração no super-repo e ~70 PRs entre os submódulos. Foco em quatro frentes:
@@ -130,6 +237,7 @@ Release de estabilização posterior ao `v1.0.0-rc1` (2026-04-24). Janela de ~3 
 
 ---
 
-[Unreleased]: https://github.com/EvolutionAPI/evo-crm-community/compare/v1.0.0-rc2...HEAD
-[v1.0.0-rc2]: https://github.com/EvolutionAPI/evo-crm-community/compare/v1.0.0-rc1...v1.0.0-rc2
-[v1.0.0-rc1]: https://github.com/EvolutionAPI/evo-crm-community/releases/tag/v1.0.0-rc1
+[Unreleased]: https://github.com/evolution-foundation/evo-crm-community/compare/v1.0.0-rc3...HEAD
+[v1.0.0-rc3]: https://github.com/evolution-foundation/evo-crm-community/compare/v1.0.0-rc2...v1.0.0-rc3
+[v1.0.0-rc2]: https://github.com/evolution-foundation/evo-crm-community/compare/v1.0.0-rc1...v1.0.0-rc2
+[v1.0.0-rc1]: https://github.com/evolution-foundation/evo-crm-community/releases/tag/v1.0.0-rc1
