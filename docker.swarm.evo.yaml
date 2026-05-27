@@ -215,6 +215,8 @@ services:
     volumes:
       - evo_crm_storage:/app/storage
       - /root/docker/evo-crm-community/evo-ai-crm-community/app/controllers/dashboard_controller.rb:/app/app/controllers/dashboard_controller.rb:ro
+      - /root/docker/evo-crm-community/evo-ai-crm-community/app/controllers/api/v1/inboxes_controller.rb:/app/app/controllers/api/v1/inboxes_controller.rb:ro
+      - /root/docker/evo-crm-community/evo-ai-crm-community/app/services/whatsapp/providers/evolution_go_service.rb:/app/app/services/whatsapp/providers/evolution_go_service.rb:ro
     networks:
       - interna
       - externa
@@ -459,12 +461,14 @@ services:
       VITE_APP_ENV: production
       VITE_API_URL: https://${API_DOMAIN}
       VITE_AUTH_API_URL: https://${API_DOMAIN}
+      VITE_WS_URL: https://${API_DOMAIN}
       VITE_EVOAI_API_URL: https://${API_DOMAIN}
       VITE_AGENT_PROCESSOR_URL: https://${API_DOMAIN}
       VITE_EVOFLOW_API_URL: https://${EVOFLOW_DOMAIN}
       VITE_LOGO_URL: ${LOGO}
       VITE_LOGO_DARK_URL: ${LOGO_DARK}
-      VITE_BRAND_NAME: ${BRAND_NAME:-BoltCRM}
+      VITE_LOGO_THUMBNAIL: ${LOGO_THUMBNAIL}
+      VITE_BRAND_NAME: ${BRAND_NAME:-Bolt CRM}
     networks:
       - interna
       - externa
