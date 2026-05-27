@@ -326,7 +326,7 @@ services:
   # Bot Runtime (Go / Gin) — Port 8080
   # ---------------------------------------------------------------------------
   evo_bot_runtime:
-    image: evoapicloud/evo-bot-runtime:1.0.0-rc4
+    image: evoapicloud/evo-bot-runtime:develop
     environment:
       LISTEN_ADDR: 0.0.0.0:8080
       REDIS_URL: ${REDIS_URL}
