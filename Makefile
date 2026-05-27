@@ -14,7 +14,8 @@ RESET := \033[0m
 
 .PHONY: help setup start stop restart logs clean build status \
         seed seed-auth seed-crm \
-        shell-auth shell-crm shell-core shell-processor shell-bot-runtime
+        shell-auth shell-crm shell-core shell-processor shell-bot-runtime \
+        build-swarm-frontend build-swarm-flow build-swarm
 
 ## —— General ——————————————————————————————————————————————————————————————————
 
@@ -128,3 +129,18 @@ shell-processor: ## Open a shell in the Processor service container
 
 shell-bot-runtime: ## Open a shell in the Bot Runtime service container
 	docker compose exec evo-bot-runtime sh
+## —— Swarm Build ——————————————————————————————————————————————————————————————
+
+build-swarm-frontend: ## Build frontend image with EVOFLOW placeholder (required for swarm)
+	@echo "$(CYAN)Building frontend image for swarm...$(RESET)"
+	docker build -t evoapicloud/evo-ai-frontend-community:1.0.0-rc4 ./evo-ai-frontend-community/
+	docker tag evoapicloud/evo-ai-frontend-community:1.0.0-rc4 local/evo-frontend:custom
+	@echo "$(GREEN)Frontend image built: local/evo-frontend:custom$(RESET)"
+
+build-swarm-flow: ## Build evo-flow image (required for journeys/campaigns)
+	@echo "$(CYAN)Building evo-flow image for swarm...$(RESET)"
+	docker build -t evoapicloud/evo-flow:1.0.0-rc4 ./evo-flow/
+	@echo "$(GREEN)Evo-flow image built: evoapicloud/evo-flow:1.0.0-rc4$(RESET)"
+
+build-swarm: build-swarm-frontend build-swarm-flow ## Build all custom images for swarm deployment
+	@echo "$(GREEN)All swarm images built successfully.$(RESET)"
