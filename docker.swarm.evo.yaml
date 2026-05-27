@@ -400,7 +400,7 @@ services:
     command: sh -c "node node_modules/.bin/typeorm migration:run -d dist/database/ormconfig.js 2>&1 || echo 'Migrations had errors, continuing...'; node dist/main.js"
     environment:
       PORT: "3005"
-      RUN_MODE: api
+      RUN_MODE: single
       QUEUE_MODE: redis
       WRITE_MODE: ch-sync
       # PostgreSQL
@@ -489,6 +489,25 @@ services:
         - traefik.http.services.evo_frontend.loadbalancer.server.port=80
         - traefik.http.services.evo_frontend.loadbalancer.passHostHeader=true
 
+  # ---------------------------------------------------------------------------
+  # Redis — in-memory store (required by evo_crm, evo_flow, evo_processor)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    command: >
+      sh -c "redis-server --appendonly yes"
+    volumes:
+      - evo_redis_data:/data
+    networks:
+      - interna
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: any
+
 networks:
   interna:
     external: true
@@ -506,4 +525,6 @@ volumes:
   evo_processor_logs:
     external: false
   evo_clickhouse_data:
+    external: false
+  evo_redis_data:
     external: false
