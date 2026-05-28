@@ -1,3 +1,21 @@
+# init local
+docker compose -f docker-compose.yml up -d
+
+Ou use o atalho do Makefile:
+make start
+Que executa docker compose up -d. 
+
+Para rebuildar as imagens primeiro:
+make build    # rebuild all images sem cache
+make start    # start services
+
+Se for a primeira vez, rode também:
+make seed     # CRM schema primeiro, depois auth
+
+
+
+
+
 set -a; source .env; set +a
 docker stack deploy --resolve-image never -c docker.swarm.evo.yaml evocrm
 

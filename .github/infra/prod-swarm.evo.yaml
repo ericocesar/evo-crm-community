@@ -29,7 +29,7 @@ services:
   # API Gateway (Nginx) — single entrypoint for all backend services
   # ---------------------------------------------------------------------------
   evo_gateway:
-    image: evoapicloud/evo-crm-gateway:latest
+    image: evoapicloud/evo-crm-gateway:1.0.0-rc4
     # The gateway routes to the 5 backend services by their docker service
     # names. Defaults match the names used in this stack (evo_auth, evo_crm,
     # evo_core, evo_processor, evo_bot_runtime). If you rename the services
@@ -55,10 +55,10 @@ services:
         condition: any
       labels:
         - traefik.enable=true
-        - traefik.docker.network=interna
+        - traefik.docker.network=externa
         - traefik.http.routers.evo_gateway.rule=Host(`${API_DOMAIN}`)
         - traefik.http.routers.evo_gateway.entrypoints=websecure
-        - traefik.http.routers.evo_gateway.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.evo_gateway.tls.certresolver=le
         - traefik.http.routers.evo_gateway.service=evo_gateway
         - traefik.http.services.evo_gateway.loadbalancer.server.port=3030
         - traefik.http.services.evo_gateway.loadbalancer.passHostHeader=true
@@ -67,8 +67,8 @@ services:
   # Auth Service (Ruby / Rails) — Port 3001
   # ---------------------------------------------------------------------------
   evo_auth:
-    image: evoapicloud/evo-auth-service-community:latest
-    command: bash -c "bundle exec rails db:migrate 2>&1 || echo 'Migration had errors, continuing...'; bundle exec rails s -p 3001 -b 0.0.0.0"
+    image: evoapicloud/evo-auth-service-community:1.0.0-rc4
+    command: bash -c "bundle exec rails db:migrate 2>&1 || echo 'Migration had errors, continuing...'; bundle exec rails db:seed 2>&1 || echo 'Seed had errors, continuing...'; bundle exec rails s -p 3001 -b 0.0.0.0"
     environment:
       RAILS_ENV: production
       RAILS_MAX_THREADS: 5
@@ -99,7 +99,16 @@ services:
       MFA_ISSUER: ${MFA_ISSUER:-EvoCRM}
       SIDEKIQ_CONCURRENCY: ${SIDEKIQ_CONCURRENCY:-10}
       ACTIVE_STORAGE_SERVICE: ${ACTIVE_STORAGE_SERVICE:-local}
+      AUTH_SERVICE_URL: https://${API_DOMAIN}
+      STORAGE_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY_ID:-}
+      STORAGE_SECRET_ACCESS_KEY: ${STORAGE_SECRET_ACCESS_KEY:-}
+      STORAGE_REGION: ${STORAGE_REGION:-auto}
+      STORAGE_BUCKET_NAME: ${STORAGE_BUCKET_NAME:-}
+      STORAGE_ENDPOINT: ${STORAGE_ENDPOINT:-}
 
+    configs:
+      - source: evo_auth_setup_survey_model
+        target: /rails/app/models/setup_survey_response.rb
     networks:
       - interna
       - externa
@@ -114,7 +123,7 @@ services:
         condition: any
 
   evo_auth_sidekiq:
-    image: evoapicloud/evo-auth-service-community:latest
+    image: evoapicloud/evo-auth-service-community:1.0.0-rc4
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
     environment:
       RAILS_ENV: production
@@ -142,9 +151,20 @@ services:
       MFA_ISSUER: ${MFA_ISSUER:-EvoCRM}
       SIDEKIQ_CONCURRENCY: ${SIDEKIQ_CONCURRENCY:-10}
       ACTIVE_STORAGE_SERVICE: ${ACTIVE_STORAGE_SERVICE:-local}
+      AUTH_SERVICE_URL: https://${API_DOMAIN}
+      STORAGE_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY_ID:-}
+      STORAGE_SECRET_ACCESS_KEY: ${STORAGE_SECRET_ACCESS_KEY:-}
+      STORAGE_REGION: ${STORAGE_REGION:-auto}
+      STORAGE_BUCKET_NAME: ${STORAGE_BUCKET_NAME:-}
+      STORAGE_ENDPOINT: ${STORAGE_ENDPOINT:-}
+    configs:
+      - source: evo_auth_setup_survey_model
+        target: /rails/app/models/setup_survey_response.rb
     networks:
       - interna
       - externa
+    healthcheck:
+      disable: true
     stop_grace_period: 300s
     deploy:
       replicas: 1
@@ -159,7 +179,7 @@ services:
   # CRM Service (Ruby / Rails) — Port 3000
   # ---------------------------------------------------------------------------
   evo_crm:
-    image: evoapicloud/evo-ai-crm-community:latest
+    image: evoapicloud/evo-ai-crm-community:1.0.0-rc4
     command: sh -c "until wget -qO- http://evo_auth:3001/health >/dev/null 2>&1; do echo 'Waiting for auth...'; sleep 5; done; bundle exec rails db:migrate 2>&1 || echo 'Migration had errors, continuing...'; bundle exec rails s -p 3000 -b 0.0.0.0"
     environment:
       RAILS_ENV: production
@@ -188,6 +208,15 @@ services:
       BOT_RUNTIME_URL: http://evo_bot_runtime:8080
       BOT_RUNTIME_SECRET: ${BOT_RUNTIME_SECRET}
       BOT_RUNTIME_POSTBACK_BASE_URL: http://evo_crm:3000
+      BRAND_NAME: ${BRAND_NAME:-Evolution}
+      LOGO: ${LOGO:-https://evolution-api.com/files/evo/logo-evo-ai.svg}
+      LOGO_DARK: ${LOGO_DARK:-https://evolution-api.com/files/evo/logo-evo-ai-dark.svg}
+      LOGO_THUMBNAIL: ${LOGO_THUMBNAIL:-https://evolution-api.com/files/evo/favicon.svg}
+    volumes:
+      - evo_crm_storage:/app/storage
+      - /root/docker/evo-crm-community/evo-ai-crm-community/app/controllers/dashboard_controller.rb:/app/app/controllers/dashboard_controller.rb:ro
+      - /root/docker/evo-crm-community/evo-ai-crm-community/app/controllers/api/v1/inboxes_controller.rb:/app/app/controllers/api/v1/inboxes_controller.rb:ro
+      - /root/docker/evo-crm-community/evo-ai-crm-community/app/services/whatsapp/providers/evolution_go_service.rb:/app/app/services/whatsapp/providers/evolution_go_service.rb:ro
     networks:
       - interna
       - externa
@@ -201,7 +230,7 @@ services:
         condition: any
 
   evo_crm_sidekiq:
-    image: evoapicloud/evo-ai-crm-community:latest
+    image: evoapicloud/evo-ai-crm-community:1.0.0-rc4
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
     environment:
       RAILS_ENV: production
@@ -217,6 +246,8 @@ services:
       REDIS_URL: ${REDIS_URL}
       EVO_AUTH_SERVICE_URL: http://evo_auth:3001
       EVO_AI_CORE_SERVICE_URL: http://evo_core:5555
+      BACKEND_URL: https://${API_DOMAIN}
+      FRONTEND_URL: https://${FRONTEND_DOMAIN}
       CORS_ORIGINS: https://${FRONTEND_DOMAIN},https://${API_DOMAIN}
       BOT_RUNTIME_URL: http://evo_bot_runtime:8080
       BOT_RUNTIME_SECRET: ${BOT_RUNTIME_SECRET}
@@ -236,7 +267,7 @@ services:
   # Core Service (Go / Gin) — Port 5555
   # ---------------------------------------------------------------------------
   evo_core:
-    image: evoapicloud/evo-ai-core-service-community:latest
+    image: evoapicloud/evo-ai-core-service-community:1.0.0-rc4
     environment:
       DB_HOST: ${POSTGRES_HOST}
       DB_PORT: ${POSTGRES_PORT:-5432}
@@ -272,7 +303,7 @@ services:
   # Processor Service (Python / FastAPI) — Port 8000
   # ---------------------------------------------------------------------------
   evo_processor:
-    image: evoapicloud/evo-ai-processor-community:latest
+    image: ghcr.io/ericocesar/evo-ai-processor-community:latest
     command: sh -c "alembic upgrade head 2>&1 || echo 'Alembic migration had errors, continuing...'; python -m scripts.run_seeders; uvicorn src.main:app --host $$HOST --port $$PORT"
     environment:
       POSTGRES_CONNECTION_STRING: ${PROCESSOR_POSTGRES_CONNECTION_STRING}
@@ -291,6 +322,7 @@ services:
       EVOAI_CRM_API_TOKEN: ${EVOAI_CRM_API_TOKEN}
       EVO_AI_CRM_URL: http://evo_crm:3000
       CORE_SERVICE_URL: http://evo_core:5555/api/v1
+      EVO_AUTH_BASE_URL: http://evo_auth:3001
       APP_URL: https://${API_DOMAIN}
       API_TITLE: Agent Processor Community
       API_DESCRIPTION: Agent Processor Community for Evo AI
@@ -308,7 +340,7 @@ services:
       replicas: 1
       placement:
         constraints:
-          - node.hostname == manager1
+          - node.role == manager
       restart_policy:
         condition: any
 
@@ -316,7 +348,7 @@ services:
   # Bot Runtime (Go / Gin) — Port 8080
   # ---------------------------------------------------------------------------
   evo_bot_runtime:
-    image: evoapicloud/evo-bot-runtime:latest
+    image: evoapicloud/evo-bot-runtime:develop
     environment:
       LISTEN_ADDR: 0.0.0.0:8080
       REDIS_URL: ${REDIS_URL}
@@ -335,16 +367,109 @@ services:
         condition: any
 
   # ---------------------------------------------------------------------------
+  # ClickHouse — Analytics DB (required by evo-flow)
+  # ---------------------------------------------------------------------------
+  evo_clickhouse:
+    image: clickhouse/clickhouse-server:24.12-alpine
+    environment:
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-evoflow}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-evoflow_pass}
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB:-evo_flow}
+    volumes:
+      - evo_clickhouse_data:/var/lib/clickhouse
+    networks:
+      - interna
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: any
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  # ---------------------------------------------------------------------------
+  # Evo Flow (NestJS — journeys, segments, campaigns) — Port 3005
+  # ---------------------------------------------------------------------------
+  evo_flow:
+    image: evoapicloud/evo-flow:1.0.0-rc4
+    command: sh -c "node node_modules/.bin/typeorm migration:run -d dist/database/ormconfig.js 2>&1 || echo 'Migrations had errors, continuing...'; node dist/main.js"
+    environment:
+      PORT: "3005"
+      RUN_MODE: api
+      QUEUE_MODE: redis
+      WRITE_MODE: ch-sync
+      # PostgreSQL
+      POSTGRES_DB_HOST: ${POSTGRES_HOST}
+      POSTGRES_DB_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB_DATABASE: ${EVOFLOW_DB:-evo_community}
+      POSTGRES_SSLMODE: ${POSTGRES_SSLMODE:-require}
+      # Redis
+      REDIS_HOST: ${PROCESSOR_REDIS_HOST:-redis}
+      REDIS_PORT: ${PROCESSOR_REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      REDIS_DB: 2
+      REDIS_QUEUE_NAME: evo-flow-events
+      # ClickHouse
+      CLICKHOUSE_HOST: evo_clickhouse
+      CLICKHOUSE_PORT: "8123"
+      CLICKHOUSE_DATABASE: ${CLICKHOUSE_DB:-evo_flow}
+      CLICKHOUSE_USERNAME: ${CLICKHOUSE_USER:-evoflow}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-evoflow_pass}
+      CLICKHOUSE_TABLE: contact_events
+      # Auth / CRM integration
+      EVO_AUTH_SERVICE_URL: http://evo_auth:3001
+      EVO_AUTH_VALIDATE_TOKEN_ENDPOINT: /api/v1/auth/validate
+      EVOAI_CRM_BASE_URL: http://evo_crm:3000
+      EVOAI_CRM_API_TOKEN: ${EVOAI_CRM_API_TOKEN}
+      # Misc
+      LOG_LEVEL: log
+      TYPEORM_LOGGING: "false"
+      SHORT_URL_BASE_DOMAIN: https://${EVOFLOW_DOMAIN}
+    networks:
+      - interna
+      - externa
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: any
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=externa
+        - traefik.http.routers.evo_flow.rule=Host(`${EVOFLOW_DOMAIN}`)
+        - traefik.http.routers.evo_flow.entrypoints=websecure
+        - traefik.http.routers.evo_flow.tls.certresolver=le
+        - traefik.http.routers.evo_flow.service=evo_flow
+        - traefik.http.services.evo_flow.loadbalancer.server.port=3005
+        - traefik.http.services.evo_flow.loadbalancer.passHostHeader=true
+
+  # ---------------------------------------------------------------------------
   # Frontend (React / Vite / Nginx) — Port 80
   # ---------------------------------------------------------------------------
   evo_frontend:
-    image: evoapicloud/evo-ai-frontend-community:latest
+    image: ghcr.io/ericocesar/evo-ai-frontend-community:latest
     environment:
       VITE_APP_ENV: production
       VITE_API_URL: https://${API_DOMAIN}
       VITE_AUTH_API_URL: https://${API_DOMAIN}
+      VITE_WS_URL: https://${API_DOMAIN}
       VITE_EVOAI_API_URL: https://${API_DOMAIN}
       VITE_AGENT_PROCESSOR_URL: https://${API_DOMAIN}
+      VITE_EVOFLOW_API_URL: https://${EVOFLOW_DOMAIN}
+      VITE_LOGO_URL: ${LOGO}
+      VITE_LOGO_DARK_URL: ${LOGO_DARK}
+      VITE_LOGO_THUMBNAIL: ${LOGO_THUMBNAIL}
+      # VITE_BRAND_NAME: ${BRAND_NAME:-Bolt CRM}
+      VITE_BRAND_NAME: Bolt CRM
     networks:
       - interna
       - externa
@@ -365,6 +490,25 @@ services:
         - traefik.http.services.evo_frontend.loadbalancer.server.port=80
         - traefik.http.services.evo_frontend.loadbalancer.passHostHeader=true
 
+  # ---------------------------------------------------------------------------
+  # Redis — in-memory store (required by evo_crm, evo_flow, evo_processor)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    command: >
+      sh -c "redis-server --appendonly yes"
+    volumes:
+      - evo_redis_data:/data
+    networks:
+      - interna
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: any
+
 networks:
   interna:
     external: true
@@ -372,6 +516,16 @@ networks:
   externa:
     external: true
     name: externa
+configs:
+  evo_auth_setup_survey_model:
+    external: true
+
 volumes:
+  evo_crm_storage:
+    external: false
   evo_processor_logs:
+    external: false
+  evo_clickhouse_data:
+    external: false
+  evo_redis_data:
     external: false

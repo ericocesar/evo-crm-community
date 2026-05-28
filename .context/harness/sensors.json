@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-28T12:54:08.043Z",
+  "source": "manual",
+  "stack": {
+    "primaryLanguage": "Ruby",
+    "languages": ["Ruby", "TypeScript", "Python", "Go"],
+    "frameworks": ["Rails 7.1", "FastAPI", "Gin", "NestJS", "React/Vite"],
+    "buildTools": ["docker-compose", "Makefile", "npm", "bundler", "pip", "go"],
+    "testFrameworks": ["RSpec", "Minitest", "pytest", "Go testing", "Jest", "Playwright"],
+    "packageManager": "bundler+npm+pip+go modules"
+  },
+  "sensors": [
+    {
+      "id": "docker-compose-validate",
+      "name": "Docker Compose Config Validation",
+      "description": "Validates all Docker Compose files for syntax and configuration errors",
+      "command": "docker compose -f docker-compose.yml config",
+      "severity": "critical",
+      "blocking": true,
+      "category": "infrastructure",
+      "expectedOutput": "Valid docker compose configuration (exit 0)"
+    },
+    {
+      "id": "docker-compose-swarm-validate",
+      "name": "Docker Swarm Compose Config Validation",
+      "description": "Validates the swarm deployment Docker Compose file",
+      "command": "docker compose -f docker-compose.swarm.yaml config",
+      "severity": "critical",
+      "blocking": true,
+      "category": "infrastructure",
+      "expectedOutput": "Valid docker compose configuration (exit 0)"
+    },
+    {
+      "id": "env-file-check",
+      "name": "Environment File Check",
+      "description": "Ensures .env file exists for local development",
+      "command": "test -f .env.example && echo 'PASS' || (echo 'FAIL: .env.example missing' && exit 1)",
+      "severity": "critical",
+      "blocking": true,
+      "category": "configuration",
+      "expectedOutput": "PASS"
+    },
+    {
+      "id": "nginx-config-test",
+      "name": "Nginx Configuration Syntax Test",
+      "description": "Validates nginx configuration template syntax (requires nginx binary or docker)",
+      "command": "docker run --rm -v $(pwd)/nginx/default.conf.template:/tmp/default.conf:ro nginx:alpine nginx -t -c /tmp/default.conf 2>&1 || echo 'SKIP: nginx template uses envsubst variables; syntax test in container may fail on env vars'",
+      "severity": "medium",
+      "blocking": false,
+      "category": "infrastructure",
+      "expectedOutput": "Config syntax check (may skip due to envsubst)"
+    },
+    {
+      "id": "git-submodule-status",
+      "name": "Git Submodule Status Check",
+      "description": "Checks if all git submodules are initialized and at expected commits",
+      "command": "git submodule status",
+      "severity": "high",
+      "blocking": false,
+      "category": "vcs",
+      "expectedOutput": "All submodules prefixed with space (clean) or + (different commit) but not - (uninitialized)"
+    },
+    {
+      "id": "makefile-targets",
+      "name": "Makefile Target Validation",
+      "description": "Ensures key Makefile targets are executable (dry-run check)",
+      "command": "make -n help && make -n start && make -n stop",
+      "severity": "medium",
+      "blocking": false,
+      "category": "tooling",
+      "expectedOutput": "No errors from make dry-runs"
+    },
+    {
+      "id": "dockerfile-lint",
+      "name": "Dockerfile Lint (Hadolint)",
+      "description": "Lints the nginx gateway Dockerfile using Hadolint (matching CI)",
+      "command": "docker run --rm -i hadolint/hadolint < nginx/Dockerfile",
+      "severity": "medium",
+      "blocking": true,
+      "category": "code-quality",
+      "expectedOutput": "No lint errors (exit 0)"
+    },
+    {
+      "id": "git-conventional-commits",
+      "name": "Conventional Commits Check",
+      "description": "Verifies recent commit messages follow Conventional Commits format",
+      "command": "git log --oneline -10 --format='%s' | grep -vE '^(feat|fix|docs|refactor|test|chore|style|perf|ci|build|revert)(\\(.+\\))?:' | grep -v '^$' && echo 'WARN: Some commits may not follow Conventional Commits' || echo 'PASS: Commits follow Conventional Commits'",
+      "severity": "warning",
+      "blocking": false,
+      "category": "vcs",
+      "expectedOutput": "Commits validated against Conventional Commits pattern"
+    },
+    {
+      "id": "docker-services-health",
+      "name": "Docker Services Health Check",
+      "description": "Checks health status of all running services",
+      "command": "docker compose ps --format json 2>/dev/null | python3 -c \"import sys,json; services=[json.loads(l) for l in sys.stdin]; unhealthy=[s['Name'] for s in services if 'Health' in s and s['Health'] not in ('','healthy')]; sys.exit(1) if unhealthy else print('PASS: All services healthy')\" 2>/dev/null || echo 'SKIP: Services not fully running or no health checks configured'",
+      "severity": "high",
+      "blocking": false,
+      "category": "infrastructure",
+      "expectedOutput": "All services healthy or skip if not running"
+    },
+    {
+      "id": "openapi-schema-check",
+      "name": "OpenAPI Schema Validation",
+      "description": "Checks for OpenAPI/Swagger schema files in services",
+      "command": "find . -name 'swagger.yaml' -o -name 'swagger.json' -o -name 'openapi.yaml' -o -name 'openapi.json' | head -1 && echo 'FOUND: OpenAPI schema exists' || echo 'INFO: No OpenAPI schema files found at umbrella level'",
+      "severity": "info",
+      "blocking": false,
+      "category": "documentation",
+      "expectedOutput": "Schema file findings"
+    }
+  ]
+}

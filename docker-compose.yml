@@ -10,9 +10,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: ${POSTGRES_DATABASE:-evo_community}
-      POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-evoai_dev_password}
+       POSTGRES_DB: ${POSTGRES_DATABASE:-evo_community}
+       POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
+       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-evoai_dev_password}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME:-postgres}"]
       interval: 5s
@@ -215,6 +215,7 @@ services:
     build:
       context: ./evo-ai-processor-community
       dockerfile: Dockerfile
+    image: ghcr.io/ericocesar/evo-ai-processor-community:latest
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -302,7 +303,7 @@ services:
     build:
       context: ./evo-flow
       dockerfile: Dockerfile
-    image: evoapicloud/evo-flow:1.0.0-rc4
+    image: ghcr.io/ericocesar/evo-flow:latest
     command: >
       sh -c "
         node node_modules/.bin/typeorm migration:run -d dist/database/ormconfig.js 2>&1 || echo 'Migrations had errors, continuing...';
@@ -366,6 +367,7 @@ services:
         VITE_EVOAI_API_URL: ${VITE_EVOAI_API_URL:-http://localhost:5555}
         VITE_AGENT_PROCESSOR_URL: ${VITE_AGENT_PROCESSOR_URL:-http://localhost:8000}
         VITE_EVOFLOW_API_URL: ${VITE_EVOFLOW_API_URL:-http://localhost:3005}
+    image: ghcr.io/ericocesar/evo-ai-frontend-community:latest
     restart: unless-stopped
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
@@ -375,7 +377,7 @@ services:
       VITE_AGENT_PROCESSOR_URL: ${VITE_AGENT_PROCESSOR_URL:-http://localhost:8000}
       VITE_EVOFLOW_API_URL: ${VITE_EVOFLOW_API_URL:-http://localhost:3005}
     ports:
-      - "5173:80"
+      - "5175:80"
     depends_on:
       evo-auth:
         condition: service_healthy
