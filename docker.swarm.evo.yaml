@@ -456,7 +456,7 @@ services:
   # Frontend (React / Vite / Nginx) — Port 80
   # ---------------------------------------------------------------------------
   evo_frontend:
-    image: local/evo-frontend:custom
+    image: ghcr.io/ericocesar/evo-ai-frontend-community:latest
     environment:
       VITE_APP_ENV: production
       VITE_API_URL: https://${API_DOMAIN}
