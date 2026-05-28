@@ -38,8 +38,8 @@ services:
     image: mailhog/mailhog
     restart: unless-stopped
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - "10250:1025"
+      - "8026:8025"
 
   # ---------------------------------------------------------------------------
   # Auth Service (Ruby / Rails) — Port 3001
@@ -272,6 +272,88 @@ services:
       start_period: 15s
 
   # ---------------------------------------------------------------------------
+  # ClickHouse — Analytics DB (required by evo-flow)
+  # ---------------------------------------------------------------------------
+  evo-clickhouse:
+    image: clickhouse/clickhouse-server:24.12-alpine
+    environment:
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-evoflow}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-evoflow_pass}
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB:-evo_flow}
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    ports:
+      - "8123:8123"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # Evo Flow (NestJS — journeys, segments, campaigns) — Port 3005
+  # ---------------------------------------------------------------------------
+  evo-flow:
+    build:
+      context: ./evo-flow
+      dockerfile: Dockerfile
+    image: evoapicloud/evo-flow:1.0.0-rc4
+    command: >
+      sh -c "
+        node node_modules/.bin/typeorm migration:run -d dist/database/ormconfig.js 2>&1 || echo 'Migrations had errors, continuing...';
+        node dist/main.js
+      "
+    environment:
+      PORT: "3005"
+      RUN_MODE: api
+      QUEUE_MODE: redis
+      WRITE_MODE: ch-sync
+      POSTGRES_DB_HOST: postgres
+      POSTGRES_DB_PORT: "5432"
+      POSTGRES_DB_USERNAME: ${POSTGRES_USERNAME:-postgres}
+      POSTGRES_DB_PASSWORD: ${POSTGRES_PASSWORD:-evoai_dev_password}
+      POSTGRES_DB_DATABASE: ${EVOFLOW_DB:-evo_community}
+      POSTGRES_SSLMODE: disable
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-evoai_redis_pass}
+      REDIS_DB: "2"
+      REDIS_QUEUE_NAME: evo-flow-events
+      CLICKHOUSE_HOST: evo-clickhouse
+      CLICKHOUSE_PORT: "8123"
+      CLICKHOUSE_DATABASE: ${CLICKHOUSE_DB:-evo_flow}
+      CLICKHOUSE_USERNAME: ${CLICKHOUSE_USER:-evoflow}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-evoflow_pass}
+      CLICKHOUSE_TABLE: contact_events
+      EVO_AUTH_SERVICE_URL: http://evo-auth:3001
+      EVO_AUTH_VALIDATE_TOKEN_ENDPOINT: /api/v1/auth/validate
+      EVOAI_CRM_BASE_URL: http://evo-crm:3000
+      EVOAI_CRM_API_TOKEN: ${EVOAI_CRM_API_TOKEN}
+      LOG_LEVEL: log
+      TYPEORM_LOGGING: "false"
+      SHORT_URL_BASE_DOMAIN: http://localhost:3005
+    ports:
+      - "3005:3005"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      evo-clickhouse:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3005/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ---------------------------------------------------------------------------
   # Frontend (React / Vite / Nginx) — Port 5173
   # ---------------------------------------------------------------------------
   evo-frontend:
@@ -283,6 +365,7 @@ services:
         VITE_AUTH_API_URL: ${VITE_AUTH_API_URL:-http://localhost:3001}
         VITE_EVOAI_API_URL: ${VITE_EVOAI_API_URL:-http://localhost:5555}
         VITE_AGENT_PROCESSOR_URL: ${VITE_AGENT_PROCESSOR_URL:-http://localhost:8000}
+        VITE_EVOFLOW_API_URL: ${VITE_EVOFLOW_API_URL:-http://localhost:3005}
     restart: unless-stopped
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
@@ -290,6 +373,7 @@ services:
       VITE_WS_URL: ${VITE_WS_URL:-http://localhost:3000}
       VITE_EVOAI_API_URL: ${VITE_EVOAI_API_URL:-http://localhost:5555}
       VITE_AGENT_PROCESSOR_URL: ${VITE_AGENT_PROCESSOR_URL:-http://localhost:8000}
+      VITE_EVOFLOW_API_URL: ${VITE_EVOFLOW_API_URL:-http://localhost:3005}
     ports:
       - "5173:80"
     depends_on:
@@ -311,3 +395,4 @@ volumes:
   crm_node_modules:
   crm_cache:
   processor_logs:
+  clickhouse_data:
