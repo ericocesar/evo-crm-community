@@ -303,7 +303,7 @@ services:
   # Processor Service (Python / FastAPI) — Port 8000
   # ---------------------------------------------------------------------------
   evo_processor:
-    image: evoapicloud/evo-ai-processor-community:1.0.0-rc4
+    image: evo-crm-community-evo-processor:latest
     command: sh -c "alembic upgrade head 2>&1 || echo 'Alembic migration had errors, continuing...'; python -m scripts.run_seeders; uvicorn src.main:app --host $$HOST --port $$PORT"
     environment:
       POSTGRES_CONNECTION_STRING: ${PROCESSOR_POSTGRES_CONNECTION_STRING}
@@ -400,7 +400,7 @@ services:
     command: sh -c "node node_modules/.bin/typeorm migration:run -d dist/database/ormconfig.js 2>&1 || echo 'Migrations had errors, continuing...'; node dist/main.js"
     environment:
       PORT: "3005"
-      RUN_MODE: single
+      RUN_MODE: api
       QUEUE_MODE: redis
       WRITE_MODE: ch-sync
       # PostgreSQL
@@ -468,7 +468,8 @@ services:
       VITE_LOGO_URL: ${LOGO}
       VITE_LOGO_DARK_URL: ${LOGO_DARK}
       VITE_LOGO_THUMBNAIL: ${LOGO_THUMBNAIL}
-      VITE_BRAND_NAME: ${BRAND_NAME:-Bolt CRM}
+      # VITE_BRAND_NAME: ${BRAND_NAME:-Bolt CRM}
+      VITE_BRAND_NAME: Bolt CRM
     networks:
       - interna
       - externa
