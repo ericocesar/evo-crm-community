@@ -10,7 +10,7 @@ scaffoldVersion: "2.0.0"
 
 ## Glossary & Domain Concepts
 
-This document defines domain-specific terminology, actors, entities, and business rules used across Evo CRM Community.
+This document defines domain-specific terminology, actors, entities, and business rules used across BChat CRM Community.
 
 ## Core Terms
 

@@ -21,7 +21,7 @@ scaffoldVersion: "2.0.0"
 
 ## Examples
 
-**Evo CRM API endpoint documentation:**
+**BChat CRM API endpoint documentation:**
 ```
 ## GET /api/v1/agents
 

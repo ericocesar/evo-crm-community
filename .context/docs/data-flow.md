@@ -10,7 +10,7 @@ scaffoldVersion: "2.0.0"
 
 ## Data Flow & Integrations
 
-Evo CRM Community processes data through a layered pipeline: client requests enter through the Nginx API Gateway, are authenticated via JWT tokens from the auth service, then routed to domain-specific backend services. All services share a single PostgreSQL database for persistence, with Redis handling caching and background job queues. External integrations (WhatsApp, AI providers) are managed by the processor service.
+BChat CRM Community processes data through a layered pipeline: client requests enter through the Nginx API Gateway, are authenticated via JWT tokens from the auth service, then routed to domain-specific backend services. All services share a single PostgreSQL database for persistence, with Redis handling caching and background job queues. External integrations (WhatsApp, AI providers) are managed by the processor service.
 
 ## Module Dependencies
 

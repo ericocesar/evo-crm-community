@@ -11,7 +11,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Design and implement server-side features across the Evo CRM Community's 5 backend services: CRM (Ruby/Rails), Auth (Ruby/Rails), Core (Go/Gin), Processor (Python/FastAPI), and Bot Runtime (Go/Gin), plus the Flow service (NestJS). Ensure API design consistency, proper inter-service communication, and adherence to the platform's shared database architecture.
+Design and implement server-side features across the BChat CRM Community's 5 backend services: CRM (Ruby/Rails), Auth (Ruby/Rails), Core (Go/Gin), Processor (Python/FastAPI), and Bot Runtime (Go/Gin), plus the Flow service (NestJS). Ensure API design consistency, proper inter-service communication, and adherence to the platform's shared database architecture.
 
 ## Responsibilities
 

@@ -21,7 +21,7 @@ scaffoldVersion: "2.0.0"
 
 ## Examples
 
-**Evo CRM project commits:**
+**BChat CRM project commits:**
 
 ```bash
 # Feature in a specific service

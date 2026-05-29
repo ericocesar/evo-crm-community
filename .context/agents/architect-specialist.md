@@ -11,7 +11,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Design and govern the overall system architecture of Evo CRM Community — a polyglot microservices platform with Ruby/Rails, Python/FastAPI, Go/Gin, and NestJS backends unified behind an Nginx API Gateway. Ensure architectural decisions maintain the platform's single-tenant design, shared database model, and extensibility through defined extension points.
+Design and govern the overall system architecture of BChat CRM Community — a polyglot microservices platform with Ruby/Rails, Python/FastAPI, Go/Gin, and NestJS backends unified behind an Nginx API Gateway. Ensure architectural decisions maintain the platform's single-tenant design, shared database model, and extensibility through defined extension points.
 
 ## Responsibilities
 

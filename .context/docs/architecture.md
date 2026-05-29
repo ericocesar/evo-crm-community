@@ -10,7 +10,7 @@ scaffoldVersion: "2.0.0"
 
 ## Architecture Notes
 
-Evo CRM Community follows a **microservices orchestration pattern** where 6 backend services communicate through a centralized Nginx API Gateway. The system is designed for single-tenant deployments with all services sharing one PostgreSQL database. Inter-service authentication uses JWT tokens from the auth service, forwarded through the gateway. Each service is independently containerized and versioned, with the umbrella repository pinning submodules at specific release tags.
+BChat CRM Community follows a **microservices orchestration pattern** where 6 backend services communicate through a centralized Nginx API Gateway. The system is designed for single-tenant deployments with all services sharing one PostgreSQL database. Inter-service authentication uses JWT tokens from the auth service, forwarded through the gateway. Each service is independently containerized and versioned, with the umbrella repository pinning submodules at specific release tags.
 
 ## System Architecture Overview
 

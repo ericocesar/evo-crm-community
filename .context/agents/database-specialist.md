@@ -11,7 +11,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Design, optimize, and maintain the shared database architecture of Evo CRM Community — a single PostgreSQL 16 database with pgvector extension, supplemented by Redis for caching/queues and ClickHouse for analytics. All 6 backend services share one PostgreSQL instance, requiring careful schema design and migration coordination.
+Design, optimize, and maintain the shared database architecture of BChat CRM Community — a single PostgreSQL 16 database with pgvector extension, supplemented by Redis for caching/queues and ClickHouse for analytics. All 6 backend services share one PostgreSQL instance, requiring careful schema design and migration coordination.
 
 ## Responsibilities
 

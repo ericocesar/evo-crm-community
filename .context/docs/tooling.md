@@ -10,7 +10,7 @@ scaffoldVersion: "2.0.0"
 
 ## Tooling & Productivity Guide
 
-This document covers the tools, scripts, and automation available to Evo CRM Community developers.
+This document covers the tools, scripts, and automation available to BChat CRM Community developers.
 
 ## Required Tooling
 

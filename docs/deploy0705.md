@@ -1,4 +1,4 @@
-# Evo CRM Community — Guia de Deploy em Docker Swarm
+# BChat CRM Community — Guia de Deploy em Docker Swarm
 
 > Gerado em 07/05/2026 com base nos erros e correções identificados na instalação de referência (`swdev`).  
 > Siga cada etapa na ordem indicada para evitar os problemas documentados na seção [Erros conhecidos](#erros-conhecidos).

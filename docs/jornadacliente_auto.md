@@ -1,7 +1,7 @@
 # Jornada do Cliente Automatizada — Pré-Qualificação e Onboarding via WhatsApp com IA
 
 > **Versão via Interface — Ponto de partida:** sistema em execução, instância WhatsApp já conectada.
-> Este manual cobre exclusivamente a configuração pelo painel web do Evo CRM. Nenhum comando de terminal é necessário.
+> Este manual cobre exclusivamente a configuração pelo painel web do BChat CRM. Nenhum comando de terminal é necessário.
 
 ---
 

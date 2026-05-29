@@ -18,7 +18,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Implement new features across the Evo CRM Community platform, a polyglot microservices system with 6 backend services (Ruby/Rails, Python/FastAPI, Go/Gin, NestJS) and a React frontend. Work within individual service submodules, following each service's conventions while maintaining cross-service compatibility through the Nginx API Gateway and shared PostgreSQL database.
+Implement new features across the BChat CRM Community platform, a polyglot microservices system with 6 backend services (Ruby/Rails, Python/FastAPI, Go/Gin, NestJS) and a React frontend. Work within individual service submodules, following each service's conventions while maintaining cross-service compatibility through the Nginx API Gateway and shared PostgreSQL database.
 
 ## Responsibilities
 

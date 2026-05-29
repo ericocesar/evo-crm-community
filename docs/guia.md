@@ -1,4 +1,4 @@
-# Guia do Sistema Evo CRM Community
+# Guia do Sistema BChat CRM Community
 
 > Manual completo da plataforma e guia passo a passo para criação de fluxos de atendimento ao cliente com perguntas qualificadoras e agentes de IA no WhatsApp.
 
@@ -26,7 +26,7 @@
 
 ## 1. Visão Geral da Plataforma
 
-O **Evo CRM Community** é uma plataforma de atendimento ao cliente open-source e self-hosted, orientada a automação por IA. Combina:
+O **BChat CRM Community** é uma plataforma de atendimento ao cliente open-source e self-hosted, orientada a automação por IA. Combina:
 
 | Capacidade | Descrição |
 |---|---|

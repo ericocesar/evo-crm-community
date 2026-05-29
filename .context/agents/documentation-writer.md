@@ -18,7 +18,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Create and maintain clear, comprehensive documentation for Evo CRM Community — a complex polyglot microservices platform. Document everything from project overview and architecture to individual service extension points, API references, and deployment guides. Keep docs synchronized with code changes across 6+ services.
+Create and maintain clear, comprehensive documentation for BChat CRM Community — a complex polyglot microservices platform. Document everything from project overview and architecture to individual service extension points, API references, and deployment guides. Keep docs synchronized with code changes across 6+ services.
 
 ## Responsibilities
 

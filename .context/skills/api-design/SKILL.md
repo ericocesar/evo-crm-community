@@ -22,7 +22,7 @@ scaffoldVersion: "2.0.0"
 
 ## Examples
 
-**Evo CRM API design — adding a new CRM endpoint:**
+**BChat CRM API design — adding a new CRM endpoint:**
 ```
 # Tickets API (routes through Nginx Gateway → evo-ai-crm-community:3000)
 

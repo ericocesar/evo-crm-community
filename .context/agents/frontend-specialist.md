@@ -11,7 +11,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Design and implement the Evo CRM Community web frontend — a React + TypeScript + Vite SPA that communicates with all backend services through the Nginx API Gateway. Build responsive, accessible customer support interfaces with AI chat, ticket management, and real-time updates via ActionCable WebSocket.
+Design and implement the BChat CRM Community web frontend — a React + TypeScript + Vite SPA that communicates with all backend services through the Nginx API Gateway. Build responsive, accessible customer support interfaces with AI chat, ticket management, and real-time updates via ActionCable WebSocket.
 
 ## Responsibilities
 

@@ -11,7 +11,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Design and implement mobile experiences for Evo CRM Community. While the platform currently does not have a dedicated mobile application, the frontend (`evo-ai-frontend-community`) is built with React + Vite and should be responsive and mobile-friendly. Future mobile work may involve React Native or progressive web app (PWA) capabilities using the existing API Gateway.
+Design and implement mobile experiences for BChat CRM Community. While the platform currently does not have a dedicated mobile application, the frontend (`evo-ai-frontend-community`) is built with React + Vite and should be responsive and mobile-friendly. Future mobile work may involve React Native or progressive web app (PWA) capabilities using the existing API Gateway.
 
 ## Responsibilities
 

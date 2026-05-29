@@ -11,7 +11,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Identify and resolve performance bottlenecks across Evo CRM Community's polyglot microservices platform. Optimize across the full stack: Nginx Gateway routing, API response times, database queries (PostgreSQL + pgvector), Redis caching strategies, background job processing (Sidekiq), and frontend load times (React/Vite).
+Identify and resolve performance bottlenecks across BChat CRM Community's polyglot microservices platform. Optimize across the full stack: Nginx Gateway routing, API response times, database queries (PostgreSQL + pgvector), Redis caching strategies, background job processing (Sidekiq), and frontend load times (React/Vite).
 
 ## Responsibilities
 

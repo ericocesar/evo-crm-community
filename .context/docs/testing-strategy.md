@@ -10,7 +10,7 @@ scaffoldVersion: "2.0.0"
 
 ## Testing Strategy
 
-Evo CRM Community is a polyglot monorepo where each service maintains its own test suite. There is no umbrella-level test framework. Testing is the responsibility of each submodule's development team, using the language-appropriate framework. CI validates Docker Compose configuration and lints Dockerfiles but does not execute service-level tests at the umbrella level.
+BChat CRM Community is a polyglot monorepo where each service maintains its own test suite. There is no umbrella-level test framework. Testing is the responsibility of each submodule's development team, using the language-appropriate framework. CI validates Docker Compose configuration and lints Dockerfiles but does not execute service-level tests at the umbrella level.
 
 ## Test Types
 

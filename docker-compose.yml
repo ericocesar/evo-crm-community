@@ -48,6 +48,7 @@ services:
     build:
       context: ./evo-auth-service-community
       dockerfile: Dockerfile
+    image: ghcr.io/ericocesar/evo-auth-service-community:latest
     restart: unless-stopped
     ports:
       - "3001:3001"
@@ -75,6 +76,7 @@ services:
     build:
       context: ./evo-auth-service-community
       dockerfile: Dockerfile
+    image: ghcr.io/ericocesar/evo-auth-service-community:latest
     restart: unless-stopped
     env_file: .env
     environment:
@@ -102,6 +104,7 @@ services:
         BUNDLE_WITHOUT: ""
         RAILS_ENV: development
         RAILS_SERVE_STATIC_FILES: "false"
+    image: ghcr.io/ericocesar/evo-ai-crm-community:latest
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -147,6 +150,7 @@ services:
         BUNDLE_WITHOUT: ""
         RAILS_ENV: development
         RAILS_SERVE_STATIC_FILES: "false"
+    image: ghcr.io/ericocesar/evo-ai-crm-community:latest
     restart: unless-stopped
     env_file: .env
     environment:
@@ -183,6 +187,7 @@ services:
     build:
       context: ./evo-ai-core-service-community
       dockerfile: Dockerfile
+    image: ghcr.io/ericocesar/evo-ai-core-service-community:latest
     restart: unless-stopped
     ports:
       - "5555:5555"
@@ -251,6 +256,7 @@ services:
     build:
       context: ./evo-bot-runtime
       dockerfile: Dockerfile
+    image: ghcr.io/ericocesar/evo-bot-runtime:latest
     restart: unless-stopped
     ports:
       - "8080:8080"

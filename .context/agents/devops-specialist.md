@@ -11,7 +11,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Design and maintain the CI/CD pipelines, Docker infrastructure, and deployment automation for Evo CRM Community. Manage 4 Docker Compose configurations, GitHub Actions workflows, multi-arch image builds, and both development and production deployment environments (Docker Compose local, Docker Swarm production, Traefik TLS termination).
+Design and maintain the CI/CD pipelines, Docker infrastructure, and deployment automation for BChat CRM Community. Manage 4 Docker Compose configurations, GitHub Actions workflows, multi-arch image builds, and both development and production deployment environments (Docker Compose local, Docker Swarm production, Traefik TLS termination).
 
 ## Responsibilities
 

@@ -22,7 +22,7 @@ scaffoldVersion: "2.0.0"
 
 ## Examples
 
-**Evo CRM code review feedback — nginx routing issue:**
+**BChat CRM code review feedback — nginx routing issue:**
 ```
 Issue: Missing CORS headers for new frontend route
 

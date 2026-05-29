@@ -17,7 +17,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Improve code structure and maintainability across Evo CRM Community's polyglot codebase without changing external behavior. Apply incremental refactoring across 4 languages (Ruby, Python, Go, TypeScript) and 6+ services while preserving existing API contracts, shared database compatibility, and inter-service communication patterns.
+Improve code structure and maintainability across BChat CRM Community's polyglot codebase without changing external behavior. Apply incremental refactoring across 4 languages (Ruby, Python, Go, TypeScript) and 6+ services while preserving existing API contracts, shared database compatibility, and inter-service communication patterns.
 
 ## Responsibilities
 

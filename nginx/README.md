@@ -1,4 +1,4 @@
-# Evo CRM — API Gateway
+# BChat CRM — API Gateway
 
 Single-entrypoint nginx that dispatches incoming requests to the five
 backend services by URL path. Packaged as

@@ -22,7 +22,7 @@ scaffoldVersion: "2.0.0"
 
 ## Examples
 
-**Evo CRM refactoring — extract method in Rails controller:**
+**BChat CRM refactoring — extract method in Rails controller:**
 ```ruby
 # Before: Inline logic in CRM tickets controller
 # evo-ai-crm-community/app/controllers/api/v1/tickets_controller.rb

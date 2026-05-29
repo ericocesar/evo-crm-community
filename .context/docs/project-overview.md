@@ -10,7 +10,7 @@ scaffoldVersion: "2.0.0"
 
 ## Project Overview
 
-Evo CRM Community is an open-source, single-tenant AI-powered customer support platform built by the Evolution Foundation. It provides a complete suite for AI-assisted customer support — authentication/authorization (OAuth 2.0 + RBAC), CRM with ticket/contact management, AI agent creation and management, agent execution pipelines, bot runtime automation, and a modern React frontend. The platform enables organizations to deploy their own AI customer service infrastructure without vendor lock-in or multi-tenancy overhead.
+BChat CRM Community is an open-source, single-tenant AI-powered customer support platform built by the Evolution Foundation. It provides a complete suite for AI-assisted customer support — authentication/authorization (OAuth 2.0 + RBAC), CRM with ticket/contact management, AI agent creation and management, agent execution pipelines, bot runtime automation, and a modern React frontend. The platform enables organizations to deploy their own AI customer service infrastructure without vendor lock-in or multi-tenancy overhead.
 
 ## Codebase Reference
 

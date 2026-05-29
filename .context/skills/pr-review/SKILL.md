@@ -24,7 +24,7 @@ scaffoldVersion: "2.0.0"
 
 ## Examples
 
-**Evo CRM approval comment:**
+**BChat CRM approval comment:**
 ```
 Looks good! Feature implementation covers all layers correctly.
 

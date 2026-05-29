@@ -17,7 +17,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Diagnose and fix bugs across the Evo CRM Community platform. Identify which service is affected by analyzing error logs, API routes, and service boundaries. Apply minimal, targeted fixes that address root causes without introducing regressions.
+Diagnose and fix bugs across the BChat CRM Community platform. Identify which service is affected by analyzing error logs, API routes, and service boundaries. Apply minimal, targeted fixes that address root causes without introducing regressions.
 
 ## Responsibilities
 

@@ -1,7 +1,7 @@
 version: "3.8"
 
 # =============================================================================
-# Evo CRM Community - Local Production Test
+# BChat CRM Community - Local Production Test
 # =============================================================================
 # Simulates the production swarm stack locally using docker compose.
 # Uses the same Docker Hub images that would run in production.

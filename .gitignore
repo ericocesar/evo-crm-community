@@ -1,4 +1,5 @@
 .env
+.env.prod
 _evo*
 
 .claude/*

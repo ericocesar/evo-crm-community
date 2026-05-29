@@ -10,7 +10,7 @@ scaffoldVersion: "2.0.0"
 
 ## Security & Compliance Notes
 
-Evo CRM Community implements defense-in-depth security across the API Gateway, authentication service, and individual backend services. Security policies are documented in `SECURITY.md` and enforced through CI/CD checks, code review, and infrastructure configuration.
+BChat CRM Community implements defense-in-depth security across the API Gateway, authentication service, and individual backend services. Security policies are documented in `SECURITY.md` and enforced through CI/CD checks, code review, and infrastructure configuration.
 
 ## Authentication & Authorization
 

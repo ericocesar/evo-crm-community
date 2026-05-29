@@ -113,6 +113,8 @@ services:
         target: /rails/app/services/licensing/setup_gate.rb
       - source: evo_auth_activation
         target: /rails/app/services/licensing/activation.rb
+      - source: evo_auth_helper
+        target: /rails/app/controllers/concerns/auth_helper.rb
     networks:
       - interna
       - externa
@@ -168,6 +170,8 @@ services:
         target: /rails/app/services/licensing/setup_gate.rb
       - source: evo_auth_activation
         target: /rails/app/services/licensing/activation.rb
+      - source: evo_auth_helper
+        target: /rails/app/controllers/concerns/auth_helper.rb
     networks:
       - interna
       - externa
@@ -410,7 +414,7 @@ services:
   # Evo Flow (NestJS — journeys, segments, campaigns) — Port 3005
   # ---------------------------------------------------------------------------
   evo_flow:
-    image: ghcr.io/ericocesar/evo-crm-community-flow:${IMAGE_TAG}
+    image: ghcr.io/ericocesar/evo-crm-community-flow:sha-eb8388b
     command: sh -c "node node_modules/.bin/typeorm migration:run -d dist/database/ormconfig.js 2>&1 || echo 'Migrations had errors, continuing...'; node dist/main.js"
     environment:
       PORT: "3005"
@@ -470,7 +474,7 @@ services:
   # Frontend (React / Vite / Nginx) — Port 80
   # ---------------------------------------------------------------------------
   evo_frontend:
-    image: ghcr.io/ericocesar/evo-crm-community-frontend:${IMAGE_TAG}
+    image: ghcr.io/ericocesar/evo-crm-community-frontend:sha-eb8388b
     environment:
       VITE_APP_ENV: production
       VITE_API_URL: https://${API_DOMAIN}
@@ -541,6 +545,8 @@ configs:
   evo_auth_setup_gate:
     external: true
   evo_auth_activation:
+    external: true
+  evo_auth_helper:
     external: true
   evo_crm_dashboard_controller:
     external: true

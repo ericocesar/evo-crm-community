@@ -22,7 +22,7 @@ scaffoldVersion: "2.0.0"
 
 ## Examples
 
-**Evo CRM bug investigation:**
+**BChat CRM bug investigation:**
 ```
 ## Bug: AI chat endpoint returns 502
 

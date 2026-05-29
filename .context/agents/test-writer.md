@@ -17,7 +17,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Write and maintain tests across the Evo CRM Community platform's polyglot services. Each service has its own test framework and conventions. The test writer ensures code quality through appropriate test coverage using the right framework for each service.
+Write and maintain tests across the BChat CRM Community platform's polyglot services. Each service has its own test framework and conventions. The test writer ensures code quality through appropriate test coverage using the right framework for each service.
 
 ## Responsibilities
 

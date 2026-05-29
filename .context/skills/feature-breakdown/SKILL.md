@@ -21,7 +21,7 @@ scaffoldVersion: "2.0.0"
 
 ## Examples
 
-**Evo CRM feature breakdown — WhatsApp Integration:**
+**BChat CRM feature breakdown — WhatsApp Integration:**
 ```
 ## Feature: WhatsApp Messaging Channel
 

@@ -24,9 +24,9 @@ scaffoldVersion: "2.0.0"
 
 ## Examples
 
-**Evo CRM security audit report:**
+**BChat CRM security audit report:**
 ```
-## Security Audit Report — Evo CRM Community
+## Security Audit Report — BChat CRM Community
 
 ### Critical
 1. **Hardcoded API token in docker-compose.yml:42**

@@ -17,7 +17,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Audit Evo CRM Community for security vulnerabilities across the full stack — Nginx Gateway, 6 backend services, shared PostgreSQL/Redis, frontend SPA, Docker infrastructure, and external integrations (WhatsApp, AI providers). Follow OWASP Top 10, enforce least privilege, and ensure secrets are never exposed.
+Audit BChat CRM Community for security vulnerabilities across the full stack — Nginx Gateway, 6 backend services, shared PostgreSQL/Redis, frontend SPA, Docker infrastructure, and external integrations (WhatsApp, AI providers). Follow OWASP Top 10, enforce least privilege, and ensure secrets are never exposed.
 
 ## Responsibilities
 

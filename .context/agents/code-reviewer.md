@@ -18,7 +18,7 @@ scaffoldVersion: "2.0.0"
 
 ## Mission
 
-Review code changes across the Evo CRM Community platform for quality, consistency, security, and adherence to project conventions. Ensure changes work correctly across the polyglot microservices architecture and don't break the shared infrastructure (PostgreSQL, Redis, Nginx Gateway).
+Review code changes across the BChat CRM Community platform for quality, consistency, security, and adherence to project conventions. Ensure changes work correctly across the polyglot microservices architecture and don't break the shared infrastructure (PostgreSQL, Redis, Nginx Gateway).
 
 ## Responsibilities
 
