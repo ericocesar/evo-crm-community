@@ -6,6 +6,13 @@
   "scripts": {
     "push": "./scripts/build-push.sh",
     "push:all": "./scripts/build-push.sh --processor",
-    "push:processor": "./scripts/build-push.sh --processor-only"
+    "push:processor": "./scripts/build-push.sh --processor-only",
+    "push:frontend": "./scripts/build-push.sh --frontend-only",
+    "push:flow": "./scripts/build-push.sh --flow-only",
+    "push:local": "./scripts/build-push.sh --local",
+    "push:all:local": "./scripts/build-push.sh --processor --local",
+    "push:processor:local": "./scripts/build-push.sh --processor-only --local",
+    "push:frontend:local": "./scripts/build-push.sh --frontend-only --local",
+    "push:flow:local": "./scripts/build-push.sh --flow-only --local"
   }
 }
