@@ -67,11 +67,8 @@ for arg in "$@"; do
   esac
 done
 
-if [ "${LOCAL_MODE}" = true ] || [ "${PUSH}" = false ]; then
-  BUILDX_OUTPUT="--load"
-else
-  BUILDX_OUTPUT="--push"
-fi
+# Para fazer o build local e depois push, sempre usamos --load para carregar no daemon local do Docker
+BUILDX_OUTPUT="--load"
 
 # ---------------------------------------------------------------------------
 # Tags
@@ -182,8 +179,8 @@ build_and_push() {
 
   TAGS=(-t "${image_remote}:${TAG_BRANCH}" -t "${image_remote}:${TAG_SHA}")
 
-  # Tag local so em modo --load (nao pode ir pro registry)
-  if [ "${PUSH}" = false ] && [ -n "${local_tag}" ]; then
+  # Sempre aplicamos a tag local se especificada, já que o build agora é local
+  if [ -n "${local_tag}" ]; then
     TAGS+=(-t "${local_tag}")
   fi
 
@@ -196,9 +193,18 @@ build_and_push() {
     "${context}"
 
   if [ "${PUSH}" = true ]; then
-    echo "    ✓ Push concluido:"
-    echo "      ${image_remote}:${TAG_BRANCH}"
-    echo "      ${image_remote}:${TAG_SHA}"
+    echo "    → Enviando imagens para o GHCR..."
+    # Iterar sobre as tags para fazer push apenas das remotas
+    for ((i=0; i<${#TAGS[@]}; i++)); do
+      if [ "${TAGS[i]}" = "-t" ]; then
+        local tag="${TAGS[i+1]}"
+        if [[ "${tag}" != local/* ]]; then
+          echo "      pushing ${tag}..."
+          docker push "${tag}"
+        fi
+      fi
+    done
+    echo "    ✓ Push concluido"
   else
     echo "    ✓ Build concluido (--load)"
   fi
@@ -222,8 +228,10 @@ build_and_push_processor() {
     "${context}"
 
   if [ "${PUSH}" = true ]; then
-    echo "    ✓ Push concluido:"
-    echo "      ${image_remote}:latest"
+    echo "    → Enviando imagem para o GHCR..."
+    echo "      pushing ${image_remote}:latest..."
+    docker push "${image_remote}:latest"
+    echo "    ✓ Push concluido"
   else
     echo "    ✓ Build concluido (--load)"
   fi
