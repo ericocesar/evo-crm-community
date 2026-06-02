@@ -1,10 +1,11 @@
-# build
-pnpm push:all
-pnpm push:processor
-pnpm push:all:local
-pnpm push:crm
+pnpm push:auth → Builda e faz push do serviço de autenticação.
+pnpm push:core → Builda e faz push do serviço core.
+pnpm push:bot-runtime → Builda e faz push do bot runtime.
+pnpm push:gateway → Builda e faz push do gateway Nginx.
+pnpm push:everything → Executa o build e push sequencial de todos os 8 serviços do monorepo para o seu GHCR.
 
-# migrate evo_crm
+# Se alterou a imagem do evo-crm e do evo-auth, o container de Auth rodará as migrations dele automaticamente.
+# rodar manualmente migrate evo_crm
 bundle exec rails db:migrate
 
 # init local
