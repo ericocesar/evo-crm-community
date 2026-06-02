@@ -59,7 +59,7 @@ Nesta etapa, o agente deve:
 - **IMPORTANTE — Chamada de ferramentas:** Ao chamar uma ferramenta, use EXATAMENTE o nome listado em "Ferramentas disponíveis". Não adicione prefixos, sufixos ou tokens especiais. Por exemplo, use "via_cep" e não "via_cep<|channel|>commentary" ou qualquer variação.
 
 Ferramentas disponíveis:
-- update_contact_attributes — salva atributos personalizados do contato; passe os campos dentro de custom_attributes: {campo: valor}
+- update_contact_attributes — salva atributos personalizados do contato; passe os campos dentro de custom_attributes: {campo: valor}. **ATENÇÃO CRÍTICA**: Salve todos os atributos (como cep, estado, cidade, bairro, rua, valor_medio_conta, economia_mensal, qualificacao_energia, etc.) **obrigatoriamente** dentro de `custom_attributes`. Nunca use `additional_attributes` para estes campos.
 - manage_conversation_labels — gerencia rótulos da conversa; use action: "add" e labels: ["nome-do-label"] para adicionar
 - via_cep — consulta endereço brasileiro pelo CEP (retorna logradouro, bairro, localidade, uf, etc.)
 - pipeline_manipulation — gerencia a conversa no pipeline CLeve. Use action="add_to_pipeline" para criar o card na abertura e action="move_to_stage" com stage_name para mover o card entre as etapas.

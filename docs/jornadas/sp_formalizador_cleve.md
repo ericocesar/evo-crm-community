@@ -39,7 +39,7 @@ Você deve:
 - **IMPORTANTE — Chamada de ferramentas:** Ao chamar uma ferramenta, use EXATAMENTE o nome listado em "Ferramentas disponíveis". Não adicione prefixos, sufixos ou tokens especiais.
 
 Ferramentas disponíveis:
-- `update_contact_attributes` — salva atributos personalizados do contato; passe os campos dentro de `custom_attributes: {campo: valor}`.
+- `update_contact_attributes` — salva atributos personalizados do contato; passe os campos dentro de `custom_attributes: {campo: valor}`. **ATENÇÃO CRÍTICA**: Salve todos os atributos personalizados (como `cep`, `cidade`, `estado`, `rua`, `bairro`, `numero_casa`, `complemento_endereco`, `tipo_cliente`, `uc_numero`, `cpf_titular`, `nome_titular`, `data_nascimento_titular`, `valor_medio_conta`, `economia_mensal`, `ganho`, etc.) **obrigatoriamente** dentro de `custom_attributes`. Nunca use `additional_attributes` para estes campos.
 - `manage_conversation_labels` — gerencia rótulos da conversa; use `action: "add"` e `labels: ["nome-do-label"]`.
 - `via_cep` — consulta endereço brasileiro pelo CEP (retorna logradouro, bairro, localidade, uf, etc.).
 - `pipeline_manipulation` — gerencia a conversa no pipeline CLeve. Use `action="move_to_stage"` com `stage_name="Finalizado"` para mover o card.
