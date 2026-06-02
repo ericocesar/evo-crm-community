@@ -1,3 +1,12 @@
+# build
+pnpm push:all
+pnpm push:processor
+pnpm push:all:local
+pnpm push:crm
+
+# migrate evo_crm
+bundle exec rails db:migrate
+
 # init local
 docker compose -f docker-compose.yml up -d
 

@@ -2,6 +2,8 @@ pnpm push             # → ./scripts/build-push.sh
 pnpm push:all         # → ./scripts/build-push.sh --processor
 pnpm push:processor   # → ./scripts/build-push.sh --processor-only
 
+git submodule update --init --recursive
+
 
 # No Mac, criar builder multi-plataforma (primeira vez so)
 docker buildx create --use --name multiplatform

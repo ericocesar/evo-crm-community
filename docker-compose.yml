@@ -396,6 +396,18 @@ services:
       retries: 3
       start_period: 15s
 
+  # ---------------------------------------------------------------------------
+  # Gateway Service (Nginx) — Port 3030
+  # ---------------------------------------------------------------------------
+  evo-gateway:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: ghcr.io/ericocesar/evo-crm-gateway:latest
+    restart: unless-stopped
+    ports:
+      - "3030:3030"
+
 volumes:
   postgres_data:
   redis_data:

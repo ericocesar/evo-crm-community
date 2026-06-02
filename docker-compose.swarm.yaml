@@ -29,7 +29,7 @@ services:
   # API Gateway (Nginx) — single entrypoint for all backend services
   # ---------------------------------------------------------------------------
   evo_gateway:
-    image: evoapicloud/evo-crm-gateway:latest
+    image: ghcr.io/ericocesar/evo-crm-gateway:latest
     # The gateway routes to the 5 backend services by their docker service
     # names. Defaults match the names used in this stack (evo_auth, evo_crm,
     # evo_core, evo_processor, evo_bot_runtime). If you rename the services
@@ -65,7 +65,7 @@ services:
   # Auth Service (Ruby / Rails) — Port 3001
   # ---------------------------------------------------------------------------
   evo_auth:
-    image: evoapicloud/evo-auth-service-community:latest
+    image: ghcr.io/ericocesar/evo-auth-service-community:latest
     command: sh -c "bundle exec rails db:migrate 2>&1 || echo 'Migration had errors, continuing...'; bundle exec rails s -p 3001 -b 0.0.0.0"
     environment:
       RAILS_ENV: production
@@ -110,7 +110,7 @@ services:
         condition: any
 
   evo_auth_sidekiq:
-    image: evoapicloud/evo-auth-service-community:latest
+    image: ghcr.io/ericocesar/evo-auth-service-community:latest
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
     # The auth-service image ships a HEALTHCHECK that hits :3001/health (Puma).
     # Sidekiq does not run a HTTP server, so the inherited healthcheck always
@@ -236,7 +236,7 @@ services:
   # Core Service (Go / Gin) — Port 5555
   # ---------------------------------------------------------------------------
   evo_core:
-    image: evoapicloud/evo-ai-core-service-community:latest
+    image: ghcr.io/ericocesar/evo-ai-core-service-community:latest
     environment:
       DB_HOST: ${POSTGRES_HOST}
       DB_PORT: ${POSTGRES_PORT:-5432}
@@ -271,7 +271,7 @@ services:
   # Processor Service (Python / FastAPI) — Port 8000
   # ---------------------------------------------------------------------------
   evo_processor:
-    image: evoapicloud/evo-ai-processor-community:latest
+    image: ghcr.io/ericocesar/evo-ai-processor-community:latest
     command: sh -c "alembic upgrade head 2>&1 || echo 'Alembic migration had errors, continuing...'; python -m scripts.run_seeders; uvicorn src.main:app --host $$HOST --port $$PORT"
     environment:
       POSTGRES_CONNECTION_STRING: ${PROCESSOR_POSTGRES_CONNECTION_STRING}
@@ -314,7 +314,7 @@ services:
   # Bot Runtime (Go / Gin) — Port 8080
   # ---------------------------------------------------------------------------
   evo_bot_runtime:
-    image: evoapicloud/evo-bot-runtime:latest
+    image: ghcr.io/ericocesar/evo-bot-runtime:latest
     environment:
       LISTEN_ADDR: 0.0.0.0:8080
       REDIS_URL: ${REDIS_URL}
@@ -335,7 +335,7 @@ services:
   # Frontend (React / Vite / Nginx) — Port 80
   # ---------------------------------------------------------------------------
   evo_frontend:
-    image: evoapicloud/evo-ai-frontend-community:latest
+    image: ghcr.io/ericocesar/evo-crm-community-frontend:latest
     environment:
       VITE_APP_ENV: production
       VITE_API_URL: https://${API_DOMAIN}

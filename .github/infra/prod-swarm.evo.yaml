@@ -29,7 +29,7 @@ services:
   # API Gateway (Nginx) — single entrypoint for all backend services
   # ---------------------------------------------------------------------------
   evo_gateway:
-    image: evoapicloud/evo-crm-gateway:1.0.0-rc4
+    image: ghcr.io/ericocesar/evo-crm-gateway:latest
     # The gateway routes to the 5 backend services by their docker service
     # names. Defaults match the names used in this stack (evo_auth, evo_crm,
     # evo_core, evo_processor, evo_bot_runtime). If you rename the services
@@ -67,7 +67,7 @@ services:
   # Auth Service (Ruby / Rails) — Port 3001
   # ---------------------------------------------------------------------------
   evo_auth:
-    image: evoapicloud/evo-auth-service-community:1.0.0-rc4
+    image: ghcr.io/ericocesar/evo-auth-service-community:latest
     command: bash -c "bundle exec rails db:migrate 2>&1 || echo 'Migration had errors, continuing...'; bundle exec rails db:seed 2>&1 || echo 'Seed had errors, continuing...'; bundle exec rails s -p 3001 -b 0.0.0.0"
     environment:
       RAILS_ENV: production
@@ -127,7 +127,7 @@ services:
         condition: any
 
   evo_auth_sidekiq:
-    image: evoapicloud/evo-auth-service-community:1.0.0-rc4
+    image: ghcr.io/ericocesar/evo-auth-service-community:latest
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
     environment:
       RAILS_ENV: production
@@ -281,7 +281,7 @@ services:
   # Core Service (Go / Gin) — Port 5555
   # ---------------------------------------------------------------------------
   evo_core:
-    image: evoapicloud/evo-ai-core-service-community:1.0.0-rc4
+    image: ghcr.io/ericocesar/evo-ai-core-service-community:latest
     environment:
       DB_HOST: ${POSTGRES_HOST}
       DB_PORT: ${POSTGRES_PORT:-5432}
@@ -362,7 +362,7 @@ services:
   # Bot Runtime (Go / Gin) — Port 8080
   # ---------------------------------------------------------------------------
   evo_bot_runtime:
-    image: evoapicloud/evo-bot-runtime:develop
+    image: ghcr.io/ericocesar/evo-bot-runtime:latest
     environment:
       LISTEN_ADDR: 0.0.0.0:8080
       REDIS_URL: ${REDIS_URL}
