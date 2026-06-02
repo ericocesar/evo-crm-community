@@ -13,6 +13,8 @@
     "push:all:local": "./scripts/build-push.sh --processor --local",
     "push:processor:local": "./scripts/build-push.sh --processor-only --local",
     "push:frontend:local": "./scripts/build-push.sh --frontend-only --local",
-    "push:flow:local": "./scripts/build-push.sh --flow-only --local"
+    "push:flow:local": "./scripts/build-push.sh --flow-only --local",
+    "push:crm": "docker compose build evo-crm && docker push ghcr.io/ericocesar/evo-ai-crm-community:latest",
+    "push:crm:local": "docker compose build evo-crm"
   }
 }
