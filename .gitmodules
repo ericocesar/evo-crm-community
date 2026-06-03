@@ -15,16 +15,16 @@
 	url = https://github.com/ericocesar/evo-ai-core-service-community.git
 [submodule "evolution-api"]
 	path = evolution-api
-	url = https://github.com/evolution-foundation/evolution-api.git
+	url = https://github.com/ericocesar/evoapi240.git
 [submodule "evolution-go"]
 	path = evolution-go
-	url = https://github.com/evolution-foundation/evolution-go.git
+	url = https://github.com/ericocesar/evogo.git
 [submodule "evo-bot-runtime"]
 	path = evo-bot-runtime
 	url = https://github.com/ericocesar/evo-bot-runtime.git
 [submodule "evo-nexus"]
 	path = evo-nexus
-	url = https://github.com/evolution-foundation/evo-nexus.git
+	url = https://github.com/ericocesar/nexusbchat.git
 [submodule "evo-flow"]
 	path = evo-flow
 	url = https://github.com/ericocesar/evo-flow.git
