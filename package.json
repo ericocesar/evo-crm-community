@@ -4,6 +4,7 @@
   "description": "Evolution CRM Community - Monorepo",
   "private": true,
   "scripts": {
+    "git": "./scripts/git-sync.sh",
     "push": "./scripts/build-push.sh",
     "push:all": "./scripts/build-push.sh --processor",
     "push:processor": "./scripts/build-push.sh --processor-only",
