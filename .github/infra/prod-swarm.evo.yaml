@@ -193,6 +193,7 @@ services:
       RAILS_ENV: production
       RAILS_SERVE_STATIC_FILES: "true"
       RAILS_LOG_TO_STDOUT: "true"
+      EVOLUTION_GO_WEBHOOK_URL: http://evo_crm:3000/webhooks/whatsapp/evolution_go
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       EVOAI_CRM_API_TOKEN: ${EVOAI_CRM_API_TOKEN}
@@ -247,6 +248,7 @@ services:
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
     environment:
       RAILS_ENV: production
+      EVOLUTION_GO_WEBHOOK_URL: http://evo_crm:3000/webhooks/whatsapp/evolution_go
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       EVOAI_CRM_API_TOKEN: ${EVOAI_CRM_API_TOKEN}
@@ -410,7 +412,7 @@ services:
   # Evo Flow (NestJS — journeys, segments, campaigns) — Port 3005
   # ---------------------------------------------------------------------------
   evo_flow:
-    image: ghcr.io/ericocesar/evo-crm-community-flow:${IMAGE_TAG}
+    image: ghcr.io/ericocesar/evo-crm-community-flow:${IMAGE_TAG:-latest}
     command: sh -c "node node_modules/.bin/typeorm migration:run -d dist/database/ormconfig.js 2>&1 || echo 'Migrations had errors, continuing...'; node dist/main.js"
     environment:
       PORT: "3005"
@@ -470,7 +472,7 @@ services:
   # Frontend (React / Vite / Nginx) — Port 80
   # ---------------------------------------------------------------------------
   evo_frontend:
-    image: ghcr.io/ericocesar/evo-crm-community-frontend:${IMAGE_TAG}
+    image: ghcr.io/ericocesar/evo-crm-community-frontend:${IMAGE_TAG:-latest}
     environment:
       VITE_APP_ENV: production
       VITE_API_URL: https://${API_DOMAIN}

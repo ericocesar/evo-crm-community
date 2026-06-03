@@ -88,7 +88,7 @@ echo "Registry:   ${REGISTRY}"
 echo "Namespace:  ${NAMESPACE}"
 echo "Branch:     ${BRANCH}"
 echo "Platform:   ${PLATFORM}"
-echo "Tags:       ${TAG_BRANCH}, ${TAG_SHA}"
+echo "Tags:       ${TAG_BRANCH}, ${TAG_SHA}, latest"
 echo "Push:       ${PUSH}"
 echo "Local mode: ${LOCAL_MODE}"
 echo "Cache:      $(${NO_CACHE} && echo 'DESABILITADO' || echo 'habilitado')"
@@ -177,7 +177,7 @@ build_and_push() {
   echo ""
   echo "  → [${name}] Contexto: ${context}  |  Platform: ${PLATFORM}"
 
-  TAGS=(-t "${image_remote}:${TAG_BRANCH}" -t "${image_remote}:${TAG_SHA}")
+  TAGS=(-t "${image_remote}:${TAG_BRANCH}" -t "${image_remote}:${TAG_SHA}" -t "${image_remote}:latest")
 
   # Sempre aplicamos a tag local se especificada, já que o build agora é local
   if [ -n "${local_tag}" ]; then
@@ -294,12 +294,14 @@ if [ "${PUSH}" = true ]; then
     echo "  Frontend:"
     echo "    ${IMAGE_FRONTEND}:${TAG_BRANCH}"
     echo "    ${IMAGE_FRONTEND}:${TAG_SHA}"
+    echo "    ${IMAGE_FRONTEND}:latest"
     echo ""
   fi
   if [ "${BUILD_FLOW}" = true ]; then
     echo "  Evo-flow:"
     echo "    ${IMAGE_FLOW}:${TAG_BRANCH}"
     echo "    ${IMAGE_FLOW}:${TAG_SHA}"
+    echo "    ${IMAGE_FLOW}:latest"
     echo ""
   fi
   if [ "${BUILD_PROCESSOR}" = true ]; then
